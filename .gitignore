@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-error.log
+pnpm-debug.log
+
+# Logs
+logs/
+*.log
+logs/**/*.log
+
+# Diretórios de build
+dist/
+build/
+
+# Arquivos do ambiente
+.env
+.env.local
+.env.*.local
+
+# Cache do editor e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

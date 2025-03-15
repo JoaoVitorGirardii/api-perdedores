@@ -1,9 +1,9 @@
 export type ItemPerdidoDTO = {
-    id: number
+    id: string
     item: string
     nome: string
     descricao: string
     valor: number
-    data_perca: Date
-    usuario_id: number
+    dataPerca: Date
+    usuarioId: string
 }

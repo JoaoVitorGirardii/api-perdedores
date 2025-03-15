@@ -4,8 +4,8 @@ import { ItemPerdidoRepository } from '../repository/itemPerdido.repository'
 class ItemPerdido {
     async create(req: Request, res: Response) {
         try {
-            const { item, nome, valor, data_perca, descricao, usuario_id } = req.body
-            if (!item || !nome || !valor || !data_perca || !descricao || !usuario_id) {
+            const { item, nome, valor, dataPerca, descricao, usuarioId } = req.body
+            if (!item || !nome || !valor || !dataPerca || !descricao || !usuarioId) {
                 res.status(400).json({ message: 'Informe todos os campos!' })
                 return
             }
@@ -14,9 +14,9 @@ class ItemPerdido {
                 item,
                 nome,
                 valor,
-                data_perca,
+                dataPerca,
                 descricao,
-                usuario_id,
+                usuarioId,
             }
 
             const itemPerdido = await ItemPerdidoRepository.CreateItemPerdido(itemDTO)
@@ -36,8 +36,24 @@ class ItemPerdido {
             return
         }
     }
-    async show(req: Request, res: Response) {
-        // code
+    async listaItensUsuarioId(req: Request, res: Response) {
+        try {
+            const { usuarioId } = req.params
+
+            if (!usuarioId) {
+                res.status(400).json({ message: 'Informe um usuário!' })
+                return
+            }
+
+            if (usuarioId) {
+                const itensPerdidos = await ItemPerdidoRepository.GetItensByUsuarioId(usuarioId)
+                res.status(200).json(itensPerdidos)
+            }
+        } catch (error: any) {
+            console.error('erro: ', error)
+            res.status(500).json({ error: error.message })
+            return
+        }
     }
     async update(req: Request, res: Response) {
         // code

@@ -3,25 +3,26 @@ import sequelize from '../config/database'
 import { UsuarioModel } from './usuario.model'
 
 export class ItemPerdidoModel extends Model {
-    id!: number
+    public id!: string
     public item!: string
     public nome!: string
     public valor!: number
-    public data_perca!: Date
+    public dataPerca!: Date
     public descricao!: string
-    public usuario_id!: number
+    public usuarioId!: string
 }
 
 ItemPerdidoModel.init(
     {
         id: {
-            type: DataTypes.INTEGER,
-            autoIncrement: true,
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
-        usuario_id: {
-            type: DataTypes.INTEGER,
+        usuarioId: {
+            type: DataTypes.UUID,
             allowNull: false,
+            field: 'usuario_id',
             references: {
                 model: UsuarioModel,
                 key: 'id',
@@ -41,8 +42,9 @@ ItemPerdidoModel.init(
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
         },
-        data_perca: {
+        dataPerca: {
             type: DataTypes.DATE,
+            field: 'data_perca',
             allowNull: false,
         },
         descricao: {

@@ -1,16 +1,36 @@
 import { UsuarioDTO } from '../utils/dto/usuario.dto'
 import { UsuarioModel } from '../models/usuario.model'
 
-export const usuarioRepository = {
+export const UsuarioRepository = {
     async CreateUsuario(usuario: Omit<UsuarioDTO, 'id'>): Promise<UsuarioDTO> {
         const usuarioCriado = await UsuarioModel.create(usuario)
-        return usuarioCriado
+
+        //remove o create e o update
+        const { createdAt, updatedAt, ...usuarioReturn } = usuarioCriado.toJSON()
+
+        return usuarioReturn as UsuarioDTO
     },
-    async GetUsuarios() {
-        // implementar codigo
+    async GetUsuarios(): Promise<UsuarioDTO[]> {
+        return await UsuarioModel.findAll({
+            attributes: {
+                exclude: ['createdAt', 'updatedAt'],
+            },
+        })
     },
-    async GetUsuarioById(id: number) {
-        // implementar codigo
+    async GetUsuarioById(id: string): Promise<UsuarioDTO | null> {
+        try {
+            return await UsuarioModel.findOne({
+                where: {
+                    id,
+                },
+                attributes: {
+                    exclude: ['createdAt', 'updatedAt'],
+                },
+            })
+        } catch (erro: any) {
+            console.log(erro)
+            return null
+        }
     },
     async UpdateUsuario(id: number, usuario: any) {
         // implementar codigo

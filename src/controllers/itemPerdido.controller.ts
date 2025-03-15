@@ -50,7 +50,6 @@ class ItemPerdido {
                 res.status(200).json(itensPerdidos)
             }
         } catch (error: any) {
-            console.error('erro: ', error)
             res.status(500).json({ error: error.message })
             return
         }

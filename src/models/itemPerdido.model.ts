@@ -15,12 +15,12 @@ export class ItemPerdidoModel extends Model {
 ItemPerdidoModel.init(
     {
         id: {
-            type: DataTypes.UUID,
+            type: DataTypes.STRING,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
         },
         usuarioId: {
-            type: DataTypes.UUID,
+            type: DataTypes.STRING,
             allowNull: false,
             field: 'usuario_id',
             references: {

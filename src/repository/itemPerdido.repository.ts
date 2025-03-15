@@ -8,7 +8,7 @@ export const ItemPerdidoRepository = {
         //remove o create e o update
         const { createdAt, updatedAt, ...itemCriadoReturn } = itemCriado.toJSON()
 
-        return itemCriadoReturn as ItemPerdidoDTO
+        return itemCriadoReturn as ItemPerdidoDTO 
     },
     async GetItensPerdidos(): Promise<ItemPerdidoDTO[]> {
         return await ItemPerdidoModel.findAll({

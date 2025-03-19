@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { UsuarioRepository } from '../repository/usuario.repository'
 import { TipoUsuarioDTO } from '../utils/enum/tipoUsuario.enum'
+import { QueryPagination } from '../utils/dto/queryPagination.dto'
 
 class Usuario {
     async create(req: Request, res: Response) {
@@ -27,7 +28,10 @@ class Usuario {
 
     async listaTodosOsUsuario(req: Request, res: Response) {
         try {
-            const itensPerdidos = await UsuarioRepository.GetUsuarios()
+            const { offSet, limit } = req.query as QueryPagination
+
+            const itensPerdidos = await UsuarioRepository.GetUsuarios(offSet, limit)
+
             res.status(200).json(itensPerdidos)
         } catch (error: any) {
             res.status(500).json({ error: error.message })

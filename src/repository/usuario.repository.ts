@@ -1,5 +1,6 @@
 import { UsuarioDTO } from '../utils/dto/usuario.dto'
 import { UsuarioModel } from '../models/usuario.model'
+import { Paginacao } from '../utils/dto/paginacao.dto'
 
 export const UsuarioRepository = {
     async CreateUsuario(usuario: Omit<UsuarioDTO, 'id'>): Promise<UsuarioDTO> {
@@ -10,12 +11,22 @@ export const UsuarioRepository = {
 
         return usuarioReturn as UsuarioDTO
     },
-    async GetUsuarios(): Promise<UsuarioDTO[]> {
-        return await UsuarioModel.findAll({
+    async GetUsuarios(offSet?: number, limit?: number): Promise<Paginacao<UsuarioDTO[]>> {
+        const usuarios = await UsuarioModel.findAll({
             attributes: {
                 exclude: ['createdAt', 'updatedAt'],
             },
+            order: [['createdAt', 'DESC']],
+            offset: offSet,
+            limit: limit,
         })
+
+        const total = await UsuarioModel.count()
+
+        return {
+            data: usuarios,
+            total,
+        }
     },
     async GetUsuarioById(id: string): Promise<UsuarioDTO | null> {
         try {

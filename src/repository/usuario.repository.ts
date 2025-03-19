@@ -13,9 +13,9 @@ export const UsuarioRepository = {
     },
     async GetUsuarios(offSet?: number, limit?: number): Promise<Paginacao<UsuarioDTO[]>> {
         const usuarios = await UsuarioModel.findAll({
-            attributes: {
-                exclude: ['createdAt', 'updatedAt'],
-            },
+            // attributes: {
+            //     exclude: ['createdAt', 'updatedAt'],
+            // },
             order: [['createdAt', 'DESC']],
             offset: offSet,
             limit: limit,

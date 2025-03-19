@@ -6,9 +6,9 @@ import { QueryPagination } from '../utils/dto/queryPagination.dto'
 class Usuario {
     async create(req: Request, res: Response) {
         try {
-            const { nome, tipo } = req.body
+            const { nome, tipo, ativo } = req.body
 
-            if (!nome || !tipo) {
+            if (!nome || !tipo || !ativo) {
                 res.status(400).json({ message: 'Informe todos os campos!' })
                 return
             }
@@ -16,6 +16,7 @@ class Usuario {
             const user = {
                 nome,
                 tipo: tipo as TipoUsuarioDTO,
+                ativo: Boolean(ativo),
             }
 
             const usuarioCriado = await UsuarioRepository.CreateUsuario(user)

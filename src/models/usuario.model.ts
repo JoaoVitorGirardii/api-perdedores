@@ -6,6 +6,7 @@ class Usuario extends Model {
     public id!: string
     public nome!: string
     public tipo!: TipoUsuarioDTO
+    public ativo!: boolean
 }
 
 Usuario.init(
@@ -23,6 +24,11 @@ Usuario.init(
             type: DataTypes.ENUM(TipoUsuarioDTO.ADMIN, TipoUsuarioDTO.USER),
             allowNull: false,
             defaultValue: TipoUsuarioDTO.USER,
+        },
+        ativo: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false,
         },
     },
     {

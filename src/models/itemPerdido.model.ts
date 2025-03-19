@@ -1,15 +1,16 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../config/database'
 import { UsuarioModel } from './usuario.model'
+import { CategoriaModel } from './categoria.model'
 
 export class ItemPerdidoModel extends Model {
     public id!: string
-    public item!: string
     public nome!: string
     public valor!: number
     public dataPerca!: Date
     public descricao!: string
     public usuarioId!: string
+    public categoriaId!: string
 }
 
 ItemPerdidoModel.init(
@@ -30,9 +31,14 @@ ItemPerdidoModel.init(
             onUpdate: 'CASCADE',
             onDelete: 'CASCADE',
         },
-        item: {
+        categoriaId: {
             type: DataTypes.STRING,
             allowNull: false,
+            field: 'categoria_id',
+            references: {
+                model: CategoriaModel,
+                key: 'id',
+            },
         },
         nome: {
             type: DataTypes.STRING,
@@ -61,5 +67,7 @@ ItemPerdidoModel.init(
 
 UsuarioModel.hasMany(ItemPerdidoModel, { foreignKey: 'usuario_id' })
 ItemPerdidoModel.belongsTo(UsuarioModel, { foreignKey: 'usuario_id' })
+CategoriaModel.hasMany(ItemPerdidoModel, { foreignKey: 'categoria_id' })
+ItemPerdidoModel.belongsTo(CategoriaModel, { foreignKey: 'categoria_id' })
 
 export const ItemPerdido = ItemPerdidoModel

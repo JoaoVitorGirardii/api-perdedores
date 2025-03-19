@@ -15,6 +15,7 @@ export const CategoriaRepository = {
             attributes: {
                 exclude: ['createdAt', 'updatedAt'],
             },
+            order: [['descricao', 'ASC']],
         })
     },
 }

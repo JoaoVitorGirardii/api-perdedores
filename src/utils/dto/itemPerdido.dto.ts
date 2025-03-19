@@ -1,6 +1,6 @@
 export type ItemPerdidoDTO = {
     id: string
-    item: string
+    categoriaId: string
     nome: string
     descricao: string
     valor: number

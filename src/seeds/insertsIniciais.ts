@@ -30,12 +30,12 @@ export async function insertsIniciais() {
         'Alimentos e bebidas',
         'Equipamentos de fotografia',
         'Artigos de higiene pessoal',
+        'Outros',
     ]
 
     for (const descricao of categorias) {
         await CategoriaRepository.Create({ descricao })
     }
-
     console.log(`Categorias criadas com sucesso.`)
 
     console.log('================FINALIZADO INSERSÃO DE DADOS================')

@@ -1,17 +1,29 @@
 import { Request, Response } from 'express'
 import { ItemPerdidoRepository } from '../repository/itemPerdido.repository'
+import { ItemPerdidoDTO } from '../utils/dto/itemPerdido.dto'
 
 class ItemPerdido {
     async create(req: Request, res: Response) {
         try {
-            const { item, nome, valor, dataPerca, descricao, usuarioId } = req.body
-            if (!item || !nome || !valor || !dataPerca || !descricao || !usuarioId) {
-                res.status(400).json({ message: 'Informe todos os campos!' })
+            const { categoriaId, nome, valor, dataPerca, descricao, usuarioId } = req.body
+            const missingFields = []
+
+            if (!categoriaId) missingFields.push('categoriaId')
+            if (!nome) missingFields.push('nome')
+            if (!valor) missingFields.push('valor')
+            if (!dataPerca) missingFields.push('dataPerca')
+            if (!descricao) missingFields.push('descricao')
+            if (!usuarioId) missingFields.push('usuarioId')
+
+            if (missingFields.length > 0) {
+                res.status(400).json({
+                    message: `Informe todos os campos! Campos faltando: ${missingFields.join(', ')}`,
+                })
                 return
             }
 
-            const itemDTO = {
-                item,
+            const itemDTO: Omit<ItemPerdidoDTO, 'id'> = {
+                categoriaId,
                 nome,
                 valor,
                 dataPerca,

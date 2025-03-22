@@ -1,11 +1,17 @@
-import { TipoUsuarioDTO } from '../utils/enum/tipoUsuario.enum'
+import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
 import { UsuarioRepository } from '../repository/usuario.repository'
 import { CategoriaRepository } from '../repository/categoria.repository'
 
 export async function insertsIniciais() {
     console.log('==================INSERINDO DADOS INICIAIS==================')
 
-    await UsuarioRepository.CreateUsuario({ nome: 'João Vitor Girardi', tipo: TipoUsuarioDTO.ADMIN, ativo: true })
+    await UsuarioRepository.CreateUsuario({
+        nome: 'João Vitor Girardi',
+        usuario: 'joaoADMIN',
+        tipo: TipoUsuarioENUM.ADMIN,
+        ativo: true,
+        senha: 'abc@123',
+    })
     console.log('Usuário criado com sucesso.')
 
     // Inserção das categorias iniciais

@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../config/database'
-import { TipoUsuarioDTO } from '../utils/enum/tipoUsuario.enum'
+import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
 
 class Categoria extends Model {
     public id!: string

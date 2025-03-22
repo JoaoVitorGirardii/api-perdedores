@@ -1,22 +1,24 @@
 import { Request, Response } from 'express'
 import { UsuarioRepository } from '../repository/usuario.repository'
-import { TipoUsuarioDTO } from '../utils/enum/tipoUsuario.enum'
+import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
 import { QueryPagination } from '../utils/dto/queryPagination.dto'
 
 class Usuario {
     async create(req: Request, res: Response) {
         try {
-            const { nome, tipo, ativo } = req.body
+            const { nome, tipo, ativo, usuario } = req.body
 
-            if (!nome || !tipo || !ativo) {
+            if (!nome || !tipo || !ativo || !usuario) {
                 res.status(400).json({ message: 'Informe todos os campos!' })
                 return
             }
 
             const user = {
                 nome,
-                tipo: tipo as TipoUsuarioDTO,
+                tipo: tipo as TipoUsuarioENUM,
                 ativo: Boolean(ativo),
+                senha: 'abc@123',
+                usuario,
             }
 
             const usuarioCriado = await UsuarioRepository.CreateUsuario(user)

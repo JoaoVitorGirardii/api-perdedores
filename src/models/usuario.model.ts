@@ -1,12 +1,14 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../config/database'
-import { TipoUsuarioDTO } from '../utils/enum/tipoUsuario.enum'
+import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
 
 class Usuario extends Model {
     public id!: string
     public nome!: string
-    public tipo!: TipoUsuarioDTO
+    public usuario!: string
+    public tipo!: TipoUsuarioENUM
     public ativo!: boolean
+    public senha!: string
 }
 
 Usuario.init(
@@ -20,15 +22,23 @@ Usuario.init(
             type: DataTypes.STRING,
             allowNull: false,
         },
-        tipo: {
-            type: DataTypes.ENUM(TipoUsuarioDTO.ADMIN, TipoUsuarioDTO.USER),
+        usuario: {
+            type: DataTypes.STRING,
             allowNull: false,
-            defaultValue: TipoUsuarioDTO.USER,
+        },
+        tipo: {
+            type: DataTypes.ENUM(TipoUsuarioENUM.ADMIN, TipoUsuarioENUM.USER),
+            allowNull: false,
+            defaultValue: TipoUsuarioENUM.USER,
         },
         ativo: {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             defaultValue: false,
+        },
+        senha: {
+            type: DataTypes.STRING,
+            allowNull: false,
         },
     },
     {

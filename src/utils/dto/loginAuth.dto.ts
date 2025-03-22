@@ -1,12 +1,8 @@
 import { TipoUsuarioENUM } from '../enum/tipoUsuario.enum'
 
-export type UsuarioDTO = {
+export type LoginAuthDTO = {
     id: string
     nome: string
-    usuario: string
     tipo: TipoUsuarioENUM
     ativo: boolean
-    senha?: string
-    createdAt?: Date
-    updatedAt?: Date
 }

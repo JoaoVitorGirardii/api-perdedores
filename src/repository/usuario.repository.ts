@@ -1,9 +1,11 @@
 import { UsuarioDTO } from '../utils/dto/usuario.dto'
 import { UsuarioModel } from '../models/usuario.model'
 import { Paginacao } from '../utils/dto/paginacao.dto'
+import { error } from 'console'
 
 export const UsuarioRepository = {
     async CreateUsuario(usuario: Omit<UsuarioDTO, 'id'>): Promise<UsuarioDTO> {
+        console.log('chegou aqui')
         const usuarioCriado = await UsuarioModel.create(usuario)
 
         //remove o create e o update
@@ -48,5 +50,32 @@ export const UsuarioRepository = {
     },
     async DeleteUsuario(id: number) {
         // implementar codigo
+    },
+    async GetUsuarioLogin(usuario: string): Promise<UsuarioDTO | null> {
+        try {
+            const user = await UsuarioModel.findOne({
+                where: {
+                    usuario,
+                },
+            })
+
+            if (!user) {
+                return null
+            }
+
+            const result: UsuarioDTO = {
+                id: user?.id,
+                nome: user.nome,
+                ativo: user.ativo,
+                tipo: user.tipo,
+                senha: user.senha,
+                usuario: user.usuario,
+            }
+
+            return result
+        } catch (erro) {
+            console.error(error)
+            return null
+        }
     },
 }

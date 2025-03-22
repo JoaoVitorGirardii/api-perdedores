@@ -1,16 +1,19 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import express, { Express, Request, Response } from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import itensPerdidosRouter from './routes/itensPerdido.routes'
 import usuarioRouter from './routes/usuario.routes'
 import categoriaRouter from './routes/categoria.routes'
-import { initializeDatabase } from './utils/utils'
-import { logRequisicoes } from './middlewares/logRequisicoes'
+import loginRouter from './routes/login.routes'
 
-dotenv.config()
+import { initializeDatabase } from './utils/initializeDatabase'
+import { logRequisicoes } from './middlewares/logRequisicoes'
+import { authMiddleware } from './middlewares/authMiddleware'
 
 const app: Express = express()
-const PORT = process.env.PORT || 3333
+const PORT = process.env.PORT
 
 app.use(
     cors({
@@ -21,8 +24,9 @@ app.use(
 app.use(express.json())
 
 app.use(logRequisicoes)
+app.use(authMiddleware)
 
-app.use('/api', [itensPerdidosRouter, usuarioRouter, categoriaRouter])
+app.use('/api', [itensPerdidosRouter, usuarioRouter, categoriaRouter, loginRouter])
 
 app.get('/', (req: Request, res: Response) => {
     res.json({ message: 'API ONLINE 🔥🚀' })

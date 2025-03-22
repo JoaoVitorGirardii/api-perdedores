@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { verificarToken } from '../utils/authService'
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
     const path = req?.originalUrl
@@ -13,6 +14,13 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
 
     if (!token) {
         res.status(401).json('Usuário não autenticado')
+        return
+    }
+
+    const tokenDescript = verificarToken(token)
+
+    if (!tokenDescript.result) {
+        res.status(401).json(tokenDescript.token)
         return
     }
 

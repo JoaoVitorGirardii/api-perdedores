@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { gerarToken } from '../utils/authService'
 import { UsuarioRepository } from '../repository/usuario.repository'
 import { LoginAuthDTO } from '../utils/dto/loginAuth.dto'
+import { PermissionENUM } from '../utils/enum/permission.enum'
 
 class Login {
     async login(req: Request, res: Response) {
@@ -30,16 +31,19 @@ class Login {
 
         delete user.senha
 
-        const userResponse = {
+        const userToken: any = {
             id: user.id,
             nome: user.nome,
             tipo: user.tipo,
             ativo: user.ativo,
+            role: user.rule,
         }
 
-        const token = gerarToken(userResponse)
+        const token = gerarToken(userToken)
 
-        res.status(200).json({ token, user: userResponse })
+        delete userToken.role
+
+        res.status(200).json({ token, user: userToken })
     }
 }
 

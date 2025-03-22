@@ -1,6 +1,7 @@
 import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
 import { UsuarioRepository } from '../repository/usuario.repository'
 import { CategoriaRepository } from '../repository/categoria.repository'
+import { PermissionENUM } from '../utils/enum/permission.enum'
 
 export async function insertsIniciais() {
     console.log('==================INSERINDO DADOS INICIAIS==================')
@@ -11,6 +12,7 @@ export async function insertsIniciais() {
         tipo: TipoUsuarioENUM.ADMIN,
         ativo: true,
         senha: 'abc@123',
+        rule: PermissionENUM.ADMINISTRADOR,
     })
     console.log('Usuário criado com sucesso.')
 

@@ -5,11 +5,10 @@ import { error } from 'console'
 
 export const UsuarioRepository = {
     async CreateUsuario(usuario: Omit<UsuarioDTO, 'id'>): Promise<UsuarioDTO> {
-        console.log('chegou aqui')
         const usuarioCriado = await UsuarioModel.create(usuario)
 
         //remove o create e o update
-        const { createdAt, updatedAt, ...usuarioReturn } = usuarioCriado.toJSON()
+        const { createdAt, updatedAt, senha, ...usuarioReturn } = usuarioCriado.toJSON()
 
         return usuarioReturn as UsuarioDTO
     },
@@ -68,6 +67,7 @@ export const UsuarioRepository = {
                 nome: user.nome,
                 ativo: user.ativo,
                 tipo: user.tipo,
+                rule: user.rule,
                 senha: user.senha,
                 usuario: user.usuario,
             }

@@ -13,14 +13,14 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     const token = authorization?.split(' ')[1]
 
     if (!token) {
-        res.status(401).json('Usuário não autenticado')
+        res.status(401).json({ error: 'Usuário não autenticado' })
         return
     }
 
     const tokenDescript = verificarToken(token)
 
     if (!tokenDescript.result) {
-        res.status(401).json(tokenDescript.token)
+        res.status(401).json({ error: tokenDescript.token })
         return
     }
 

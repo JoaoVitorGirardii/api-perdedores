@@ -1,10 +1,19 @@
 import express from 'express'
 import { ItemPerdidoController } from '../controllers/itemPerdido.controller'
+import { permission } from '../middlewares/permissionMiddleware'
+import { PermissionENUM } from '../utils/enum/permission.enum'
 
 const router = express.Router()
 
-router.post('/item-perdido', ItemPerdidoController.create)
-router.get('/itens-perdidos', ItemPerdidoController.listaTodosOsItens)
-router.get('/itens-perdidos/usuario/:usuarioId', ItemPerdidoController.listaItensUsuarioId)
+//rotas apenas para ADMINISTRADOR
+router.get('/itens-perdidos', permission([PermissionENUM.ADMINISTRADOR]), ItemPerdidoController.listaTodosOsItens)
+
+//rotas liberadas para ADMINISTRADOR e USUARIO
+router.post('/item-perdido', permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]), ItemPerdidoController.create)
+router.get(
+    '/itens-perdidos/usuario/:usuarioId',
+    permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]),
+    ItemPerdidoController.listaItensUsuarioId,
+)
 
 export default router

@@ -1,10 +1,15 @@
 import express from 'express'
 import { UsuarioController } from '../controllers/usuario.controller'
+import { permission } from '../middlewares/permissionMiddleware'
+import { PermissionENUM } from '../utils/enum/permission.enum'
 
 const router = express.Router()
 
-router.post('/usuario', UsuarioController.create)
-router.get('/usuario/listar', UsuarioController.listaTodosOsUsuario)
-router.get('/usuario/:id', UsuarioController.getUsuarioById)
+//rotas apenas para ADMINISTRADOR
+router.get('/usuario/listar', permission([PermissionENUM.ADMINISTRADOR]), UsuarioController.listaTodosOsUsuario)
+
+//rotas liberadas para ADMINISTRADOR e USUARIO
+router.post('/usuario', permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]), UsuarioController.create)
+router.get('/usuario/:id', permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]), UsuarioController.getUsuarioById)
 
 export default router

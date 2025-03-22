@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../config/database'
 import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
+import { PermissionENUM } from '../utils/enum/permission.enum'
 
 class Usuario extends Model {
     public id!: string
@@ -9,6 +10,7 @@ class Usuario extends Model {
     public tipo!: TipoUsuarioENUM
     public ativo!: boolean
     public senha!: string
+    public rule!: PermissionENUM
 }
 
 Usuario.init(
@@ -39,6 +41,11 @@ Usuario.init(
         senha: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        rule: {
+            type: DataTypes.ENUM(PermissionENUM.ADMINISTRADOR, PermissionENUM.USUARIO),
+            allowNull: false,
+            defaultValue: PermissionENUM.USUARIO,
         },
     },
     {

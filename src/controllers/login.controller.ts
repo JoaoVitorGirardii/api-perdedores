@@ -1,31 +1,30 @@
 import { Request, Response } from 'express'
 import { gerarToken } from '../utils/authService'
 import { UsuarioRepository } from '../repository/usuario.repository'
-import { LoginAuthDTO } from '../utils/dto/loginAuth.dto'
-import { PermissionENUM } from '../utils/enum/permission.enum'
 
 class Login {
     async login(req: Request, res: Response) {
         const { usuario, senha } = req.body
 
         if (!usuario || !senha) {
-            res.status(400).json({ msg: 'Usuário e/ou senha inválido.' })
+            res.status(400).json({ error: 'Usuário e/ou senha não informado(s).' })
+            return
         }
 
         const user = await UsuarioRepository.GetUsuarioLogin(usuario)
 
         if (!user) {
-            res.status(400).json({ msg: 'Usuário e/ou senha inválido.' })
+            res.status(400).json({ error: 'Usuário e/ou senha inválido.' })
             return
         }
 
         if (user.senha !== senha) {
-            res.status(400).json({ msg: 'Usuário e/ou senha inválido.' })
+            res.status(400).json({ error: 'Usuário e/ou senha inválido.' })
             return
         }
 
         if (!user.ativo) {
-            res.status(400).json({ msg: 'Usuário desativado.' })
+            res.status(400).json({ error: 'Usuário desativado.' })
             return
         }
 
@@ -42,6 +41,7 @@ class Login {
         const token = gerarToken(userToken)
 
         delete userToken.role
+        delete userToken.ativo
 
         res.status(200).json({ token, user: userToken })
     }

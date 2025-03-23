@@ -5,28 +5,54 @@ import { QueryPagination } from '../utils/dto/queryPagination.dto'
 import { PermissionENUM } from '../utils/enum/permission.enum'
 
 class Usuario {
-    async create(req: Request, res: Response) {
+    async createAdmin(req: Request, res: Response) {
         try {
-            const { nome, tipo, ativo, usuario, rule } = req.body
+            const { nome, usuario, senha } = req.body
 
-            if (!nome || !tipo || !ativo || !usuario) {
-                res.status(400).json({ message: 'Informe todos os campos!' })
+            if (!nome || !senha || !usuario) {
+                res.status(400).json({ error: 'Preencha todos os dados para se cadastrar!' })
                 return
             }
 
-            console.log('REQUEST: ', req.body)
+            const user = {
+                nome,
+                tipo: TipoUsuarioENUM.ADMIN,
+                ativo: true,
+                senha,
+                usuario,
+                rule: PermissionENUM.ADMINISTRADOR,
+            }
+
+            await UsuarioRepository.CreateUsuario(user)
+
+            res.status(201).json({ msg: 'Usuário cadastrado com sucesso.', nome })
+        } catch (error) {
+            res.status(500).json({ error: 'Erro ao criar usuário!' })
+            return
+        }
+    }
+
+    async createUsuario(req: Request, res: Response) {
+        try {
+            const { nome, usuario, senha } = req.body
+
+            if (!nome || !senha || !usuario) {
+                res.status(400).json({ error: 'Preencha todos os dados para se cadastrar!' })
+                return
+            }
 
             const user = {
                 nome,
-                tipo: tipo as TipoUsuarioENUM,
-                ativo: Boolean(ativo),
-                senha: 'abc@123',
+                tipo: TipoUsuarioENUM.USER,
+                ativo: true,
+                senha,
                 usuario,
-                rule: rule as PermissionENUM,
+                rule: PermissionENUM.USUARIO,
             }
 
-            const usuarioCriado = await UsuarioRepository.CreateUsuario(user)
-            res.status(201).json(usuarioCriado)
+            await UsuarioRepository.CreateUsuario(user)
+
+            res.status(201).json({ msg: 'Usuário cadastrado com sucesso.', nome })
         } catch (error) {
             res.status(500).json({ error: 'Erro ao criar usuário!' })
             return

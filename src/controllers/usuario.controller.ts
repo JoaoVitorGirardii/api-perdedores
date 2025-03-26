@@ -7,9 +7,9 @@ import { PermissionENUM } from '../utils/enum/permission.enum'
 class Usuario {
     async createAdmin(req: Request, res: Response) {
         try {
-            const { nome, usuario, senha } = req.body
+            const { nome, usuario } = req.body
 
-            if (!nome || !senha || !usuario) {
+            if (!nome || !usuario) {
                 res.status(400).json({ error: 'Preencha todos os dados para se cadastrar!' })
                 return
             }
@@ -18,7 +18,7 @@ class Usuario {
                 nome,
                 tipo: TipoUsuarioENUM.ADMIN,
                 ativo: true,
-                senha,
+                senha: 'senhaBYadmin',
                 usuario,
                 rule: PermissionENUM.ADMINISTRADOR,
             }

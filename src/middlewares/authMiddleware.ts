@@ -4,12 +4,12 @@ import { verificarToken } from '../utils/authService'
 const HASH_HEADER = process.env.HASH_HEADER as string
 
 export function authMiddleware(req: Request, res: Response, next: NextFunction) {
-    console.log('HASH_HEADER: ', HASH_HEADER)
     const path = req?.originalUrl
     const method = req.method
     const appSource = req.headers['x-app-source']
     const rotasSemAutenticacao = ['/api/login']
 
+    //validação que permite que apenas requisições com esse header acessem a api
     if (appSource !== HASH_HEADER) {
         res.status(403).json({
             error: 'Acesso não autorizado',

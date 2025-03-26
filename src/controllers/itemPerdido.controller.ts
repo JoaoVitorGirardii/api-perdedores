@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { ItemPerdidoRepository } from '../repository/itemPerdido.repository'
 import { ItemPerdidoDTO } from '../utils/dto/itemPerdido.dto'
+import { QueryPagination } from '../utils/dto/queryPagination.dto'
 
 class ItemPerdido {
     async create(req: Request, res: Response) {
@@ -51,16 +52,18 @@ class ItemPerdido {
     async listaItensUsuarioId(req: Request, res: Response) {
         try {
             const { usuarioId } = req.params
+            const { offSet, limit } = req.query as QueryPagination
 
             if (!usuarioId) {
                 res.status(400).json({ message: 'Informe um usuário!' })
                 return
             }
 
-            if (usuarioId) {
-                const itensPerdidos = await ItemPerdidoRepository.GetItensByUsuarioId(usuarioId)
-                res.status(200).json(itensPerdidos)
-            }
+            const itensPerdidos = await ItemPerdidoRepository.GetItensByUsuarioId(usuarioId, offSet, limit)
+            const totalItens = await ItemPerdidoRepository.TotalDeItensByUsuarioId(usuarioId)
+            const totalDeFinanceiro = itensPerdidos.reduce((total, item) => Number(item.valor) + total, 0)
+
+            res.status(200).json({ data: { itensPerdidos, totalDeFinanceiro }, total: totalItens })
         } catch (error: any) {
             res.status(500).json({ error: error.message })
             return

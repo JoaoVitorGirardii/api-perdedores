@@ -8,7 +8,7 @@ export const ItemPerdidoRepository = {
         //remove o create e o update
         const { createdAt, updatedAt, ...itemCriadoReturn } = itemCriado.toJSON()
 
-        return itemCriadoReturn as ItemPerdidoDTO 
+        return itemCriadoReturn as ItemPerdidoDTO
     },
     async GetItensPerdidos(): Promise<ItemPerdidoDTO[]> {
         return await ItemPerdidoModel.findAll({
@@ -17,13 +17,23 @@ export const ItemPerdidoRepository = {
             },
         })
     },
-    async GetItensByUsuarioId(usuarioId: string): Promise<ItemPerdidoDTO[]> {
+    async GetItensByUsuarioId(usuarioId: string, offSet?: number, limit?: number): Promise<ItemPerdidoDTO[]> {
         return await ItemPerdidoModel.findAll({
             where: {
                 usuarioId,
             },
+            order: [['createdAt', 'DESC']],
+            offset: offSet,
+            limit: limit,
             attributes: {
                 exclude: ['createdAt', 'updatedAt'],
+            },
+        })
+    },
+    async TotalDeItensByUsuarioId(usuarioId: string): Promise<number> {
+        return await ItemPerdidoModel.count({
+            where: {
+                usuarioId,
             },
         })
     },

@@ -1,4 +1,5 @@
 import { PermissionENUM } from '../enum/permission.enum'
+import { SexoENUM } from '../enum/sexo.enum'
 import { TipoUsuarioENUM } from '../enum/tipoUsuario.enum'
 
 export type UsuarioDTO = {
@@ -9,6 +10,7 @@ export type UsuarioDTO = {
     rule: PermissionENUM
     ativo: boolean
     senha?: string
+    sexo: SexoENUM
     createdAt?: Date
     updatedAt?: Date
 }

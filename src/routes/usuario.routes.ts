@@ -10,7 +10,7 @@ router.get('/usuario/listar', permission([PermissionENUM.ADMINISTRADOR]), Usuari
 router.post('/usuario-admin', permission([PermissionENUM.ADMINISTRADOR]), UsuarioController.createAdmin)
 
 //rotas liberadas para ADMINISTRADOR e USUARIO
-router.get('/usuario/:id', permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]), UsuarioController.getUsuarioById)
+router.get('/usuario/:usuarioId', permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]), UsuarioController.getUsuarioById)
 
 //rota liberada para usuários se cadastrarem
 router.post('/usuario', UsuarioController.createUsuario)

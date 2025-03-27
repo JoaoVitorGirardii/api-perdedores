@@ -15,5 +15,10 @@ router.get(
     permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]),
     ItemPerdidoController.listaItensUsuarioId,
 )
-
+router.get(
+    '/itens-perdidos/top10/usuarios',
+    permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]),
+    ItemPerdidoController.topDezPessoasPerdedoras,
+)
+router.get('/itens-perdidos/top10', permission([PermissionENUM.USUARIO, PermissionENUM.ADMINISTRADOR]), ItemPerdidoController.topDez)
 export default router

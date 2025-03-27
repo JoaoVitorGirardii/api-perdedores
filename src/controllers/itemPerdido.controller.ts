@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { ItemPerdidoRepository } from '../repository/itemPerdido.repository'
 import { ItemPerdidoDTO } from '../utils/dto/itemPerdido.dto'
 import { QueryPagination } from '../utils/dto/queryPagination.dto'
+import { ListaTopDezENUM } from '../utils/enum/listaTopDez.enum'
 
 class ItemPerdido {
     async create(req: Request, res: Response) {
@@ -13,7 +14,6 @@ class ItemPerdido {
             if (!nome) missingFields.push('nome')
             if (!valor) missingFields.push('valor')
             if (!dataPerca) missingFields.push('dataPerca')
-            if (!descricao) missingFields.push('descricao')
             if (!usuarioId) missingFields.push('usuarioId')
 
             if (missingFields.length > 0) {
@@ -69,11 +69,46 @@ class ItemPerdido {
             return
         }
     }
-    async update(req: Request, res: Response) {
-        // code
+    async topDezPessoasPerdedoras(req: Request, res: Response) {
+        const itens = await ItemPerdidoRepository.TopDezUsuariosPerdedores()
+
+        res.status(200).json({ itens })
     }
-    async delete(req: Request, res: Response) {
-        // code
+    async topDez(req: Request, res: Response) {
+        const { type } = req.query as { type: any }
+        console.log(type)
+
+        if (!Object.values(ListaTopDezENUM).includes(type)) {
+            res.status(400).json({ error: 'tipo de lista inválido!' })
+            return
+        }
+
+        const tipoSelecionado = type as ListaTopDezENUM
+
+        let itens
+
+        switch (tipoSelecionado) {
+            case ListaTopDezENUM.ITENS_MAIS_PERDIDOS:
+                itens = await ItemPerdidoRepository.TopDezItensPerdidos({})
+                break
+            case ListaTopDezENUM.ITENS_MAIS_PERDIDOS_HOMEM:
+                itens = await ItemPerdidoRepository.TopDezItensPerdidos({ homens: true })
+                break
+            case ListaTopDezENUM.ITENS_MAIS_PERDIDOS_MULHERES:
+                itens = await ItemPerdidoRepository.TopDezItensPerdidos({ mulheres: true })
+                break
+            case ListaTopDezENUM.ITENS_MAIS_PERDIDOS_MES:
+                //itens = await ItemPerdidoRepository.TopDezItensPerdidos()
+                break
+            case ListaTopDezENUM.ITENS_MAIS_PERDIDOS_SEMANA:
+                //itens = await ItemPerdidoRepository.TopDezItensPerdidos()
+                break
+            default:
+                break
+        }
+
+        res.status(200).json({ itens })
+        return
     }
 }
 

@@ -1,5 +1,8 @@
 import { ItemPerdidoDTO } from '../utils/dto/itemPerdido.dto'
 import { ItemPerdidoModel } from '../models/itemPerdido.model'
+import sequelize from '../config/database'
+import { TopDezPerdedores } from '../utils/dto/topDezPerdedores.dto'
+import { TopDezDTO } from '../utils/dto/topDez.dto'
 
 export const ItemPerdidoRepository = {
     async CreateItemPerdido(itemPerdido: Omit<ItemPerdidoDTO, 'id'>): Promise<ItemPerdidoDTO> {
@@ -36,5 +39,49 @@ export const ItemPerdidoRepository = {
                 usuarioId,
             },
         })
+    },
+    async TopDezUsuariosPerdedores(): Promise<TopDezPerdedores[]> {
+        const sql = `
+            SELECT COUNT(*) as quantidade, 
+                   SUM(valor) as "valorTotal", 
+                   u.nome as "nomeUsuario" 
+              FROM itens_perdidos ip
+              JOIN usuario u
+                ON u.id = ip.usuario_id
+             GROUP BY ip.usuario_id, u.nome
+             ORDER BY quantidade desc
+             LIMIT 10
+        `
+
+        const response = await sequelize.query(sql)
+
+        return response[0] as TopDezPerdedores[]
+    },
+    async TopDezItensPerdidos({ homens = false, mulheres = false }): Promise<TopDezDTO[]> {
+        let filtroHomemOuMulher = ''
+
+        if (homens) {
+            filtroHomemOuMulher = `WHERE u.sexo = 'MASCULINO'`
+        }
+        if (mulheres) {
+            filtroHomemOuMulher = `WHERE u.sexo = 'FEMININO'`
+        }
+
+        const sql = `
+            SELECT COUNT(*) as quantidade, 
+                   SUM(valor) as "valorTotal",
+				   ip.nome as "nomeItem",
+				   COUNT(*) FILTER (WHERE u.sexo = 'FEMININO') as "totalFeminino",
+                   COUNT(*) FILTER (WHERE u.sexo = 'MASCULINO') as "totalMasculino"
+              FROM itens_perdidos ip
+              JOIN usuario u
+                ON u.id = ip.usuario_id
+            ${filtroHomemOuMulher}
+             GROUP BY ip.nome
+             ORDER BY quantidade desc
+             LIMIT 10
+        `
+        const response = await sequelize.query(sql)
+        return response[0] as TopDezDTO[]
     },
 }

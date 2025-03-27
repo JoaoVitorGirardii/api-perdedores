@@ -3,14 +3,20 @@ import { UsuarioRepository } from '../repository/usuario.repository'
 import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
 import { QueryPagination } from '../utils/dto/queryPagination.dto'
 import { PermissionENUM } from '../utils/enum/permission.enum'
+import { SexoENUM } from '../utils/enum/sexo.enum'
 
 class Usuario {
     async createAdmin(req: Request, res: Response) {
         try {
-            const { nome, usuario } = req.body
+            const { nome, usuario, sexo } = req.body
 
             if (!nome || !usuario) {
                 res.status(400).json({ error: 'Preencha todos os dados para se cadastrar!' })
+                return
+            }
+
+            if (!Object.values(SexoENUM).includes(sexo)) {
+                res.status(400).json({ error: 'Sexo inválido!' })
                 return
             }
 
@@ -18,6 +24,7 @@ class Usuario {
                 nome,
                 tipo: TipoUsuarioENUM.ADMIN,
                 ativo: true,
+                sexo: sexo as SexoENUM,
                 senha: 'senhaBYadmin',
                 usuario,
                 rule: PermissionENUM.ADMINISTRADOR,
@@ -34,10 +41,15 @@ class Usuario {
 
     async createUsuario(req: Request, res: Response) {
         try {
-            const { nome, usuario, senha } = req.body
+            const { nome, usuario, senha, sexo } = req.body
 
             if (!nome || !senha || !usuario) {
                 res.status(400).json({ error: 'Preencha todos os dados para se cadastrar!' })
+                return
+            }
+
+            if (!Object.values(SexoENUM).includes(sexo)) {
+                res.status(400).json({ error: 'Sexo inválido!' })
                 return
             }
 
@@ -46,6 +58,7 @@ class Usuario {
                 tipo: TipoUsuarioENUM.USER,
                 ativo: true,
                 senha,
+                sexo: sexo as SexoENUM,
                 usuario,
                 rule: PermissionENUM.USUARIO,
             }
@@ -74,15 +87,15 @@ class Usuario {
 
     async getUsuarioById(req: Request, res: Response) {
         try {
-            const { id } = req.params
+            const { usuarioId } = req.params
 
-            if (!id) {
+            if (!usuarioId) {
                 res.status(400).json({ message: 'Informe um usuario!' })
                 return
             }
 
-            if (id) {
-                const usuario = await UsuarioRepository.GetUsuarioById(id)
+            if (usuarioId) {
+                const usuario = await UsuarioRepository.GetUsuarioById(usuarioId)
                 res.status(200).json(usuario)
             }
         } catch (error: any) {

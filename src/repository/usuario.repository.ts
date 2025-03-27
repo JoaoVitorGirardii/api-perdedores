@@ -68,6 +68,7 @@ export const UsuarioRepository = {
                 ativo: user.ativo,
                 tipo: user.tipo,
                 rule: user.rule,
+                sexo: user.sexo,
                 senha: user.senha,
                 usuario: user.usuario,
             }

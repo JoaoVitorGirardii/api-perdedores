@@ -12,7 +12,7 @@ export function gerarToken(payload: LoginAuthDTO) {
     if (!SECRET_KEY) {
         throw new Error('Erro ao gerar autenticação')
     }
-    return jwt.sign(payload, SECRET_KEY, { expiresIn: '5d' })
+    return jwt.sign(payload, SECRET_KEY, { expiresIn: '10d' })
 }
 
 export function verificarToken(token: string): VerificaTokenResponse {

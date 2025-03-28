@@ -13,6 +13,7 @@ export const ItemPerdidoRepository = {
 
         return itemCriadoReturn as ItemPerdidoDTO
     },
+
     async GetItensPerdidos(): Promise<ItemPerdidoDTO[]> {
         return await ItemPerdidoModel.findAll({
             attributes: {
@@ -20,6 +21,7 @@ export const ItemPerdidoRepository = {
             },
         })
     },
+
     async GetItensByUsuarioId(usuarioId: string, offSet?: number, limit?: number): Promise<ItemPerdidoDTO[]> {
         return await ItemPerdidoModel.findAll({
             where: {
@@ -33,6 +35,7 @@ export const ItemPerdidoRepository = {
             },
         })
     },
+
     async TotalDeItensByUsuarioId(usuarioId: string): Promise<number> {
         return await ItemPerdidoModel.count({
             where: {
@@ -40,11 +43,14 @@ export const ItemPerdidoRepository = {
             },
         })
     },
-    async TopDezUsuariosPerdedores(): Promise<TopDezPerdedores[]> {
+
+    async TopDezUsuariosPerdedores(): Promise<TopDezDTO[]> {
         const sql = `
             SELECT COUNT(*) as quantidade, 
                    SUM(valor) as "valorTotal", 
-                   u.nome as "nomeUsuario" 
+                   u.nome as "nomeItem",
+                   0 as "totalFeminino",
+                   0 as "totalMasculino"
               FROM itens_perdidos ip
               JOIN usuario u
                 ON u.id = ip.usuario_id
@@ -54,17 +60,23 @@ export const ItemPerdidoRepository = {
         `
 
         const response = await sequelize.query(sql)
-
-        return response[0] as TopDezPerdedores[]
+        return response[0] as TopDezDTO[]
     },
-    async TopDezItensPerdidos({ homens = false, mulheres = false }): Promise<TopDezDTO[]> {
-        let filtroHomemOuMulher = ''
+
+    async TopDezItensPerdidos({ homens = false, mulheres = false, mes = false, semana = false }): Promise<TopDezDTO[]> {
+        let filtro = ''
 
         if (homens) {
-            filtroHomemOuMulher = `WHERE u.sexo = 'MASCULINO'`
+            filtro = `WHERE u.sexo = 'MASCULINO'`
         }
         if (mulheres) {
-            filtroHomemOuMulher = `WHERE u.sexo = 'FEMININO'`
+            filtro = `WHERE u.sexo = 'FEMININO'`
+        }
+        if (semana) {
+            filtro = `WHERE DATE(ip.created_at) >= CURRENT_DATE - INTERVAL '1 week'`
+        }
+        if (mes) {
+            filtro = `WHERE DATE(ip.created_at) >= CURRENT_DATE - INTERVAL '1 month'`
         }
 
         const sql = `
@@ -76,7 +88,7 @@ export const ItemPerdidoRepository = {
               FROM itens_perdidos ip
               JOIN usuario u
                 ON u.id = ip.usuario_id
-            ${filtroHomemOuMulher}
+            ${filtro}
              GROUP BY ip.nome
              ORDER BY quantidade desc
              LIMIT 10

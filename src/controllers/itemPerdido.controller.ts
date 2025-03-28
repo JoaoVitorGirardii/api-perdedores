@@ -69,14 +69,8 @@ class ItemPerdido {
             return
         }
     }
-    async topDezPessoasPerdedoras(req: Request, res: Response) {
-        const itens = await ItemPerdidoRepository.TopDezUsuariosPerdedores()
-
-        res.status(200).json({ itens })
-    }
     async topDez(req: Request, res: Response) {
         const { type } = req.query as { type: any }
-        console.log(type)
 
         if (!Object.values(ListaTopDezENUM).includes(type)) {
             res.status(400).json({ error: 'tipo de lista inválido!' })
@@ -88,6 +82,9 @@ class ItemPerdido {
         let itens
 
         switch (tipoSelecionado) {
+            case ListaTopDezENUM.TOP_DEZ_PERDEDORES:
+                itens = await ItemPerdidoRepository.TopDezUsuariosPerdedores()
+                break
             case ListaTopDezENUM.ITENS_MAIS_PERDIDOS:
                 itens = await ItemPerdidoRepository.TopDezItensPerdidos({})
                 break
@@ -98,10 +95,10 @@ class ItemPerdido {
                 itens = await ItemPerdidoRepository.TopDezItensPerdidos({ mulheres: true })
                 break
             case ListaTopDezENUM.ITENS_MAIS_PERDIDOS_MES:
-                //itens = await ItemPerdidoRepository.TopDezItensPerdidos()
+                itens = await ItemPerdidoRepository.TopDezItensPerdidos({ mes: true })
                 break
             case ListaTopDezENUM.ITENS_MAIS_PERDIDOS_SEMANA:
-                //itens = await ItemPerdidoRepository.TopDezItensPerdidos()
+                itens = await ItemPerdidoRepository.TopDezItensPerdidos({ semana: true })
                 break
             default:
                 break

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { gerarToken } from '../utils/authService'
 import { UsuarioRepository } from '../repository/usuario.repository'
+import { HashPass } from '../utils/hashPass'
 
 class Login {
     async login(req: Request, res: Response) {
@@ -18,7 +19,9 @@ class Login {
             return
         }
 
-        if (user.senha !== senha) {
+        const senhaValida = await HashPass.checkPassword(user.senha || '', senha)
+
+        if (!senhaValida) {
             res.status(400).json({ error: 'Usuário e/ou senha inválido.' })
             return
         }

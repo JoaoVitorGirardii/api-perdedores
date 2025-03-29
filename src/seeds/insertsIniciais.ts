@@ -3,6 +3,7 @@ import { UsuarioRepository } from '../repository/usuario.repository'
 import { CategoriaRepository } from '../repository/categoria.repository'
 import { PermissionENUM } from '../utils/enum/permission.enum'
 import { SexoENUM } from '../utils/enum/sexo.enum'
+import { HashPass } from '../utils/hashPass'
 
 export async function insertsIniciais() {
     console.log('==================INSERINDO DADOS INICIAIS==================')
@@ -12,7 +13,7 @@ export async function insertsIniciais() {
         usuario: 'joaoADMIN',
         tipo: TipoUsuarioENUM.ADMIN,
         ativo: true,
-        senha: 'abc@123',
+        senha: await HashPass.GeraHash('abc@123'),
         sexo: SexoENUM.MASCULINO,
         rule: PermissionENUM.ADMINISTRADOR,
     })

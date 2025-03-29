@@ -4,11 +4,12 @@ import { TipoUsuarioENUM } from '../utils/enum/tipoUsuario.enum'
 import { QueryPagination } from '../utils/dto/queryPagination.dto'
 import { PermissionENUM } from '../utils/enum/permission.enum'
 import { SexoENUM } from '../utils/enum/sexo.enum'
+import { HashPass } from '../utils/hashPass'
 
 class Usuario {
     async createAdmin(req: Request, res: Response) {
         try {
-            const { nome, usuario, sexo } = req.body
+            const { nome, usuario, sexo, senha } = req.body
 
             if (!nome || !usuario) {
                 res.status(400).json({ error: 'Preencha todos os dados para se cadastrar!' })
@@ -25,7 +26,7 @@ class Usuario {
                 tipo: TipoUsuarioENUM.ADMIN,
                 ativo: true,
                 sexo: sexo as SexoENUM,
-                senha: 'senhaBYadmin',
+                senha: await HashPass.GeraHash('abc@123'),
                 usuario,
                 rule: PermissionENUM.ADMINISTRADOR,
             }
@@ -57,7 +58,7 @@ class Usuario {
                 nome,
                 tipo: TipoUsuarioENUM.USER,
                 ativo: true,
-                senha,
+                senha: await HashPass.GeraHash(senha),
                 sexo: sexo as SexoENUM,
                 usuario,
                 rule: PermissionENUM.USUARIO,
